@@ -1,0 +1,44 @@
+<html>
+
+<head>
+
+    <meta http-equiv="content-type" charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/dark.min.css">
+</head>
+
+<body>
+
+
+    Hello
+    <div id="app">
+        <table>
+            <tr>
+                <th>モンスター</th>
+                <th>ランク</th>
+            </tr>
+            <tr v-for="mind in minds">
+                <td>{{ mind.monster_name }}</td>
+                <td>{{ mind.rank }}</td>
+            </tr>
+        </table>
+    </div>
+    <script type="module">
+        import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.esm.browser.js';
+        import { main } from './index.js';
+
+        (async () => {
+
+            const result = await main();
+
+            const app = new Vue({
+                el: '#app',
+                data: {
+                    minds: [result]
+                }
+            });
+        })();
+    </script>
+
+</body>
+
+</html>
