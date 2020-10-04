@@ -1,4 +1,6 @@
-﻿const connect = (dbname, version, initialize) => {
+﻿import { data } from './data.js';
+
+const connect = (dbname, version, initialize) => {
     return new Promise((resolve, reject) => {
         let request = window.indexedDB.open(dbname, version);
         request.onerror = (e) => {
@@ -69,20 +71,22 @@ export const main = async () => {
     await deleteDB('MyDB');
 
     const db = await connect('MyDB', 1, (db) => {
-        db.createObjectStore('minds', { keyPath: ['monster_name', 'rank'] });
+        db.createObjectStore('minds', { keyPath: ['monster', 'rank'] });
     });
 
     await openTransaction(db, ['minds'], 'readwrite', (transaction) => {
         const minds = transaction.objectStore('minds');
-        minds.add({
-            monster_name: 'キングスライム',
-            rank: 'S',
-            effect: 'すごいつよい'
-        });
+        const hoge = data.slice(0,-1);
+        for(const i of hoge) {
+            minds.add({
+                rank: 'S',
+                ...i,
+            });
+        }
     });
 
     const result = await openTransactionWithResult(db, ['minds'], 'readwrite', async (transaction) => {
-        const result = await get(transaction.objectStore('minds'), ['キングスライム', 'S']);
+        const result = await get(transaction.objectStore('minds'), ['アカイライ', 'S']);
         return result;
     });
     return result;

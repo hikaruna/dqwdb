@@ -1,0 +1,10 @@
+version: '3.7'
+services:
+    data_to_json:
+        build:
+            context: .
+            target: jq
+        working_dir: /app
+        volumes:
+            - .:/app
+        command: 'bash data_to_json.sh'
