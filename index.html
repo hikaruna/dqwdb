@@ -11,21 +11,21 @@
     <div id="app">
         <table>
             <tr>
-                <th><a href=".?orderby=no">no</a></th>
-                <th><a href=".?orderby=モンスター">モンスター</a></th>
-                <th>特技</th>
-                <th>HP</th>
-                <th>MP</th>
-                <th>力</th>
-                <th>会心</th>
-                <th>身守</th>
-                <th>攻魔</th>
-                <th>回魔</th>
-                <th>素早</th>
-                <th>器用</th>
-                <th>コスト</th>
-                <th>色</th>
-                <th>効果</th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=no`">no</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=モンスター`">モンスター</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=特技`">特技</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=HP`">HP</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=MP`">MP</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=力`">力</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=会心`">会心</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=身守`">身守</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=攻魔`">攻魔</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=回魔`">回魔</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=素早`">素早</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=器用`">器用</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=コスト`">コスト</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=色`">色</a></th>
+                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=効果`">効果</a></th>
             </tr>
             <tr v-for="mind in minds">
                 <td>{{ mind["no"] }}</td>

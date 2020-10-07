@@ -1,100 +1,26 @@
-﻿import { data } from './data.js';
+﻿import { connect, openTransaction, openTransactionWithResult, getAll, deleteDB } from './idbutil.js';
+import { data } from './data.js';
 
-const connect = (dbname, version, initialize) => {
-    return new Promise((resolve, reject) => {
-        let request = window.indexedDB.open(dbname, version);
-        request.onerror = (e) => {
-            reject(e.target.result);
-        };
-        request.onupgradeneeded = (e) => {
-            initialize(e.target.result);
-        }
-        request.onsuccess = (e) => {
-            resolve(e.target.result);
-        };
-    });
-};
-
-const openTransaction = (db, objectStoreList, mode, cb) => {
-    return new Promise((resolve, reject) => {
-        console.log(`openTransaction: a   objectStoreList: ${objectStoreList}`);
-        const transaction = db.transaction(objectStoreList, mode);
-        cb(transaction);
-        transaction.onerror = (e) => {
-            reject(e);
-        };
-        transaction.oncomplete = (e) => {
-            resolve();
-        };
-    });
-};
-
-const openTransactionWithResult = (db, objectStoreList, mode, cb) => {
-    return new Promise(async (resolve, reject) => {
-        console.log(`openTransaction: a   objectStoreList: ${objectStoreList}`);
-        const transaction = db.transaction(objectStoreList, mode);
-        const result = await cb(transaction);
-        transaction.onerror = (e) => {
-            reject(e);
-        };
-        transaction.oncomplete = (e) => {
-            resolve(result);
-        };
-    });
-};
-
-const get = (objectStore, key) => {
-    return new Promise((resolve, reject) => {
-        const request = objectStore.get(key);
-        request.onerror = (e) => {
-            reject(e);
-        }
-        request.onsuccess = () => {
-            resolve(request.result);
-        }
-    });
-};
-
-const openCursor = (objectStore) => {
-    return new Promise((resolve, reject) => {
-        const request = objectStore.openCursor();
-        request.onerror = (e) => reject(e);
-        request.onsuccess = (e) => resolve(e.target.result);
-    });
-}
-
-const getAll = (objectStore) => {
-    return new Promise((resolve) => {
-        let result = [];
-        objectStore.openCursor().onsuccess = (e) => {
-            const cursor = e.target.result;
-            if (cursor) {
-                result.push(cursor.value);
-                cursor.continue();
-            } else {
-                resolve(result);
-            }
-        }
-    });
-}
-
-const deleteDB = (name) => {
-    return new Promise((resolve, reject) => {
-        const request = window.indexedDB.deleteDatabase(name);
-        request.onerror = (e) => {
-            reject(e);
-        };
-        request.onsuccess = () => {
-            resolve();
-        };
-    })
-};
-
-export const main = async () => {
+const setup = async () => {
     await deleteDB('MyDB');
 
     const db = await connect('MyDB', 1, (db) => {
-        db.createObjectStore('minds', { keyPath: ['no', 'rank'] });
+        const objectStore = db.createObjectStore('minds', { keyPath: ['no', 'rank'] });
+        objectStore.createIndex("no", "no", { unique: true });
+        objectStore.createIndex("モンスター", "モンスター", { unique: false });
+        objectStore.createIndex("特技", "特技", { unique: false });
+        objectStore.createIndex("HP", "HP", { unique: false });
+        objectStore.createIndex("MP", "MP", { unique: false });
+        objectStore.createIndex("力", "力", { unique: false });
+        objectStore.createIndex("会心", "会心", { unique: false });
+        objectStore.createIndex("身守", "身守", { unique: false });
+        objectStore.createIndex("攻魔", "攻魔", { unique: false });
+        objectStore.createIndex("回魔", "回魔", { unique: false });
+        objectStore.createIndex("素早", "素早", { unique: false });
+        objectStore.createIndex("器用", "器用", { unique: false });
+        objectStore.createIndex("コスト", "コスト", { unique: false });
+        objectStore.createIndex("色", "色", { unique: false });
+        objectStore.createIndex("効果", "効果", { unique: false });
     });
 
     await openTransaction(db, ['minds'], 'readwrite', (transaction) => {
@@ -108,10 +34,17 @@ export const main = async () => {
         }
     });
 
+    return db;
+}
+
+export const main = async (orderBy, orderType) => {
+
+    const db = await setup();
+
     const result = await openTransactionWithResult(db, ['minds'], 'readwrite', async (transaction) => {
         const minds = transaction.objectStore('minds');
         //const result = await get(minds, ['アカイライ', 'S']);
-        const result = await getAll(minds);
+        const result = await getAll(minds, orderBy, orderType);
         return result;
     });
     return result;
