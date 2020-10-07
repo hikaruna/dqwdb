@@ -55,6 +55,29 @@ const get = (objectStore, key) => {
     });
 };
 
+const openCursor = (objectStore) => {
+    return new Promise((resolve, reject) => {
+        const request = objectStore.openCursor();
+        request.onerror = (e) => reject(e);
+        request.onsuccess = (e) => resolve(e.target.result);
+    });
+}
+
+const getAll = (objectStore) => {
+    return new Promise((resolve) => {
+        let result = [];
+        objectStore.openCursor().onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+                result.push(cursor.value);
+                cursor.continue();
+            } else {
+                resolve(result);
+            }
+        }
+    });
+}
+
 const deleteDB = (name) => {
     return new Promise((resolve, reject) => {
         const request = window.indexedDB.deleteDatabase(name);
@@ -76,8 +99,8 @@ export const main = async () => {
 
     await openTransaction(db, ['minds'], 'readwrite', (transaction) => {
         const minds = transaction.objectStore('minds');
-        const hoge = data.slice(0,-1);
-        for(const i of hoge) {
+        const hoge = data.slice(0, -1);
+        for (const i of hoge) {
             minds.add({
                 rank: 'S',
                 ...i,
@@ -86,7 +109,9 @@ export const main = async () => {
     });
 
     const result = await openTransactionWithResult(db, ['minds'], 'readwrite', async (transaction) => {
-        const result = await get(transaction.objectStore('minds'), ['アカイライ', 'S']);
+        const minds = transaction.objectStore('minds');
+        //const result = await get(minds, ['アカイライ', 'S']);
+        const result = await getAll(minds);
         return result;
     });
     return result;
