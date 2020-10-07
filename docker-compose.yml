@@ -1,5 +1,11 @@
 version: '3.7'
 services:
+    web:
+        image: nginx
+        volumes:
+            - .:/usr/share/nginx/html
+        ports:
+            - 8080:80
     data_to_json:
         build:
             context: .
