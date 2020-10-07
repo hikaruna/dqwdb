@@ -94,7 +94,7 @@ export const main = async () => {
     await deleteDB('MyDB');
 
     const db = await connect('MyDB', 1, (db) => {
-        db.createObjectStore('minds', { keyPath: ['monster', 'rank'] });
+        db.createObjectStore('minds', { keyPath: ['no', 'rank'] });
     });
 
     await openTransaction(db, ['minds'], 'readwrite', (transaction) => {

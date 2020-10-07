@@ -6,11 +6,11 @@ services:
             - .:/usr/share/nginx/html
         ports:
             - 8080:80
-    data_to_json:
+    data_to_js:
         build:
             context: .
             target: jq
         working_dir: /app
         volumes:
             - .:/app
-        command: 'bash data_to_json.sh'
+        command: 'bash data_to_js.sh'
