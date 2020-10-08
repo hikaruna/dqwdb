@@ -4,11 +4,12 @@
     <meta name="robots" content="noindex">
     <meta http-equiv="content-type" charset="utf-8">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/kognise/water.css@latest/dist/dark.min.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 
 <body>
 
-    <div id="app">
+    <div id="app" v-cloak>
         <table>
             <tr>
                 <th><a :href="`.?ordertype=${reverseOrderType}&orderby=no`">no</a></th>
