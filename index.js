@@ -1,5 +1,5 @@
 ﻿import Vue from 'https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.esm.browser.js';
-import { main } from './main.js';
+import { main, columns } from './main.js';
 
 (async () => {
 
@@ -18,6 +18,9 @@ import { main } from './main.js';
             desc: orderType === "desc"
         },
         computed: {
+            columns() {
+                return columns;
+            },
             orderType() {
                 return this.desc ? "desc" : "asc";
             },

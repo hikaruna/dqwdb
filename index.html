@@ -12,38 +12,12 @@
     <div id="app" v-cloak>
         <table>
             <tr>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=no`">no</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=モンスター`">モンスター</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=特技`">特技</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=HP`">HP</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=MP`">MP</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=力`">力</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=会心`">会心</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=身守`">身守</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=攻魔`">攻魔</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=回魔`">回魔</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=素早`">素早</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=器用`">器用</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=コスト`">コスト</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=色`">色</a></th>
-                <th><a :href="`.?ordertype=${reverseOrderType}&orderby=効果`">効果</a></th>
+                <template v-for="column in columns">
+                    <th><a :href="`.?ordertype=${reverseOrderType}&orderby=${column}`">{{ column }}</a></th>
+                </template>
             </tr>
             <tr v-for="mind in minds">
-                <td>{{ mind["no"] }}</td>
-                <td>{{ mind["モンスター"] }}</td>
-                <td>{{ mind["特技"] }}</td>
-                <td>{{ mind["HP"] }}</td>
-                <td>{{ mind["MP"] }}</td>
-                <td>{{ mind["力"] }}</td>
-                <td>{{ mind["会心"] }}</td>
-                <td>{{ mind["身守"] }}</td>
-                <td>{{ mind["攻魔"] }}</td>
-                <td>{{ mind["回魔"] }}</td>
-                <td>{{ mind["素早"] }}</td>
-                <td>{{ mind["器用"] }}</td>
-                <td>{{ mind["コスト"] }}</td>
-                <td>{{ mind["色"] }}</td>
-                <td>{{ mind["効果"] }}</td>
+                <td v-for="column in columns">{{ mind[column] }}</td>
             </tr>
         </table>
     </div>
