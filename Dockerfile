@@ -1,4 +1,4 @@
-FROM ubuntu as jq
+FROM ubuntu as dev
 
 RUN apt-get update && apt-get install -y \
 locales \
@@ -8,5 +8,9 @@ locales \
 && update-locale LANG=ja_JP.UTF-8
 
 RUN apt-get update && apt-get install -y \
+sqlite3 \
+ruby-dev \
 jq \
-&& apt-get clean -y && rm -rf /var/lib/apt/lists/* \
+&& apt-get clean -y && rm -rf /var/lib/apt/lists/*
+
+RUN gem install sqlite3

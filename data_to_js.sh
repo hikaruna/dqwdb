@@ -1,19 +1,5 @@
-cat data.tsv |
-sed 's/％/%/g' |
-sed 's/ヒャド属性耐性7%/ヒャド属性耐性+7%/g' |
-sed 's/スキルHP+回復効果/スキルHP回復効果/g' |
-sed 's/ターン開始時\(HP\|MP\)+を/ターン開始時\1を/g' |
-sed 's/\(ターン開始時\|戦闘終了時に\)\(HP\|MP\)を\([0-9]\+\)回復する/\1\2を回復する+\3/g' |
-sed 's/コスト+/こころ最大コスト+/g' |
-sed 's/スキルの斬撃・体技/スキルの斬撃体技/g' |
-cat > normalization_data.tsv
-
-cat normalization_data.tsv |
-cut -f 15 |
-sed 's/ /\n/g' |
-sed 's/\(.*\)+[0-9]\+[％%]\?.*$/\1/' |
-sort -u |
-cat > effects.tsv
+./parser/normalize.sh data.tsv > normalization_data.tsv
+./parser/parse_effects_tsv.sh normalization_data.tsv > effects.tsv
 
 cat effects.tsv |
 tr '\n' "\t" |
