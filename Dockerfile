@@ -12,5 +12,3 @@ sqlite3 \
 ruby-dev \
 jq \
 && apt-get clean -y && rm -rf /var/lib/apt/lists/*
-
-RUN gem install sqlite3
