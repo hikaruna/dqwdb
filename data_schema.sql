@@ -50,8 +50,8 @@ AS `値`
   AND
   `こころの特殊効果`.`特殊効果` = `特殊効果`.`名前`
 ORDER BY `こころ`.rowid;
-DROP VIEW IF EXISTS "こころPivotView";
-CREATE VIEW "こころPivotView" AS 
+DROP VIEW IF EXISTS "MindPivotView";
+CREATE VIEW "MindPivotView" AS 
 SELECT `モンスター`
 ,max(case when `名前` = 'けもの系へのダメージ' THEN `値` END) AS `けもの系へのダメージ`
 ,max(case when `名前` = 'こころ最大コスト' THEN `値` END) AS `こころ最大コスト`
@@ -79,6 +79,7 @@ SELECT `モンスター`
 ,max(case when `名前` = 'ゾンビ系へのダメージ' THEN `値` END) AS `ゾンビ系へのダメージ`
 ,max(case when `名前` = 'ターン開始時HPを回復する' THEN `値` END) AS `ターン開始時HPを回復する`
 ,max(case when `名前` = 'ターン開始時MPを回復する' THEN `値` END) AS `ターン開始時MPを回復する`
+,max(case when `名前` = 'デイン属性じゅもんダメージ' THEN `値` END) AS `デイン属性じゅもんダメージ`
 ,max(case when `名前` = 'デイン属性とくぎダメージ' THEN `値` END) AS `デイン属性とくぎダメージ`
 ,max(case when `名前` = 'デイン属性ダメージ' THEN `値` END) AS `デイン属性ダメージ`
 ,max(case when `名前` = 'デイン属性耐性' THEN `値` END) AS `デイン属性耐性`

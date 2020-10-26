@@ -54,8 +54,8 @@ ORDER BY \`こころ\`.rowid;
 EOS
 
 
-echo 'DROP VIEW IF EXISTS "こころPivotView";'
-echo 'CREATE VIEW "こころPivotView" AS '
+echo 'DROP VIEW IF EXISTS "MindPivotView";'
+echo 'CREATE VIEW "MindPivotView" AS '
 $(dirname $0)/parse_effects_tsv_to_minds_pivot_sql.sh effects.tsv
 
 echo 'COMMIT;'
