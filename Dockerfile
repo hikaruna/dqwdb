@@ -1,6 +1,11 @@
 FROM ruby
 
-RUN apt-get update -qq && apt-get install -y postgresql-client
+RUN \
+  --mount=type=cache,target=/var/cache/apt \
+  --mount=type=cache,target=/var/lib/apt \
+  apt-get update && apt-get install -y \
+  postgresql-client
+
 
 WORKDIR /app
 COPY Gemfile Gemfile.lock ./
