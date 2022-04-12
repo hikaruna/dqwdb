@@ -1,0 +1,27 @@
+<%= form_with(model: mind) do |form| %>
+  <% if mind.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(mind.errors.count, "error") %> prohibited this mind from being saved:</h2>
+
+      <ul>
+        <% mind.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :no, style: "display: block" %>
+    <%= form.number_field :no %>
+  </div>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

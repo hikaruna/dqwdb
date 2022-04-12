@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @mind %>
+
+<div>
+  <%= link_to "Edit this mind", edit_mind_path(@mind) %> |
+  <%= link_to "Back to minds", minds_path %>
+
+  <%= button_to "Destroy this mind", @mind, method: :delete %>
+</div>
