@@ -26,22 +26,6 @@ CREATE TABLE IF NOT EXISTS "item_rarity" (
 	"item_rarity"	INTEGER NOT NULL,
 	PRIMARY KEY("item_rarity")
 ) STRICT;
-CREATE TABLE IF NOT EXISTS "item_skill_tokusyukouka" (
-	"item"	TEXT NOT NULL,
-	"skill_tokusyukouka"	TEXT NOT NULL,
-	"hosei_per"	REAL,
-	"hosei_value"	INTEGER,
-	"kougekizi_no_kakuritu_hosei"	INTEGER,
-	"hanekaesu_kakuritu_hosei"	INTEGER,
-	"tern_kaisizi_sentou_syuuryouzi"	INTEGER,
-	"condition"	BLOB,
-	"genkaitoppa"	TEXT,
-	"rensei"	TEXT,
-	FOREIGN KEY("genkaitoppa") REFERENCES "genkaitoppa_level"("genkaitoppa_level"),
-	FOREIGN KEY("item") REFERENCES "item"("item"),
-	FOREIGN KEY("rensei") REFERENCES "rensei_level"("rensei_level"),
-	FOREIGN KEY("skill_tokusyukouka") REFERENCES "skill_tokusyukouka"("skill_tokusyukouka")
-) STRICT;
 CREATE TABLE IF NOT EXISTS "item_type" (
 	"item_type"	TEXT NOT NULL,
 	PRIMARY KEY("item_type")
@@ -54,3 +38,31 @@ CREATE TABLE IF NOT EXISTS "skill_tokusyukouka" (
 	"skill_tokusyukouka"	TEXT NOT NULL,
 	PRIMARY KEY("skill_tokusyukouka")
 ) STRICT;
+CREATE TABLE IF NOT EXISTS "skill" (
+	"skill"	TEXT NOT NULL,
+	PRIMARY KEY("skill"),
+	FOREIGN KEY("skill") REFERENCES "skill_tokusyukouka"("skill_tokusyukouka") ON UPDATE CASCADE ON DELETE RESTRICT
+) STRICT;
+CREATE TABLE IF NOT EXISTS "tokusyukouka" (
+	"tokusyukouka"	TEXT NOT NULL,
+	PRIMARY KEY("tokusyukouka"),
+	FOREIGN KEY("tokusyukouka") REFERENCES "skill_tokusyukouka"("skill_tokusyukouka") ON UPDATE CASCADE ON DELETE RESTRICT
+) STRICT;
+CREATE TABLE IF NOT EXISTS "item_skill_tokusyukouka" (
+	"item"	TEXT NOT NULL,
+	"skill_tokusyukouka"	TEXT NOT NULL,
+	"hosei_per"	INTEGER,
+	"hosei_value"	INTEGER,
+	"kougekizi_no_kakuritu_hosei"	INTEGER,
+	"hanekaesu_kakuritu_hosei"	INTEGER,
+	"tern_kaisizi_sentou_syuuryouzi"	INTEGER,
+	"condition"	TEXT,
+	"genkaitoppa"	INTEGER,
+	"rensei"	INTEGER,
+	FOREIGN KEY("genkaitoppa") REFERENCES "genkaitoppa_level"("genkaitoppa_level") ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY("item") REFERENCES "item"("item") ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY("rensei") REFERENCES "rensei_level"("rensei_level") ON UPDATE CASCADE ON DELETE RESTRICT,
+	FOREIGN KEY("skill_tokusyukouka") REFERENCES "skill_tokusyukouka"("skill_tokusyukouka") ON UPDATE CASCADE ON DELETE RESTRICT
+) STRICT;
+CREATE TABLE sqlite_stat1(tbl,idx,stat);
+CREATE TABLE sqlite_stat4(tbl,idx,neq,nlt,ndlt,sample);
