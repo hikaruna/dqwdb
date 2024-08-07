@@ -64,5 +64,10 @@ CREATE TABLE IF NOT EXISTS "item_skill_tokusyukouka" (
 	FOREIGN KEY("rensei") REFERENCES "rensei_level"("rensei_level") ON UPDATE CASCADE ON DELETE RESTRICT,
 	FOREIGN KEY("skill_tokusyukouka") REFERENCES "skill_tokusyukouka"("skill_tokusyukouka") ON UPDATE CASCADE ON DELETE RESTRICT
 ) STRICT;
+CREATE TABLE IF NOT EXISTS "zokusei" (
+	"zokusei"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("zokusei")
+) STRICT;
 CREATE TABLE sqlite_stat1(tbl,idx,stat);
 CREATE TABLE sqlite_stat4(tbl,idx,neq,nlt,ndlt,sample);
