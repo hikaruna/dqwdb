@@ -71,3 +71,8 @@ CREATE TABLE IF NOT EXISTS "zokusei" (
 ) STRICT;
 CREATE TABLE sqlite_stat1(tbl,idx,stat);
 CREATE TABLE sqlite_stat4(tbl,idx,neq,nlt,ndlt,sample);
+CREATE TABLE IF NOT EXISTS "keitou" (
+	"keitou"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("keitou")
+) STRICT;
