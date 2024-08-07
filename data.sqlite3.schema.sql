@@ -81,3 +81,11 @@ CREATE TABLE IF NOT EXISTS "zyoutaiizyou" (
 	"order"	INTEGER NOT NULL UNIQUE,
 	PRIMARY KEY("zyoutaiizyou")
 ) STRICT;
+CREATE TABLE IF NOT EXISTS "kokoro" (
+	"no"	INTEGER NOT NULL UNIQUE,
+	"kokoro"	TEXT NOT NULL,
+	"cost"	INTEGER NOT NULL,
+	"keitou"	TEXT,
+	PRIMARY KEY("kokoro"),
+	FOREIGN KEY("keitou") REFERENCES "keitou"("keitou") ON UPDATE CASCADE ON DELETE RESTRICT
+) STRICT;
