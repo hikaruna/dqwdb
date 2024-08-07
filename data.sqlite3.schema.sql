@@ -76,3 +76,8 @@ CREATE TABLE IF NOT EXISTS "keitou" (
 	"order"	INTEGER NOT NULL UNIQUE,
 	PRIMARY KEY("keitou")
 ) STRICT;
+CREATE TABLE IF NOT EXISTS "zyoutaiizyou" (
+	"zyoutaiizyou"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("zyoutaiizyou")
+) STRICT;
