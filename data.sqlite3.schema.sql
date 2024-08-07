@@ -89,3 +89,8 @@ CREATE TABLE IF NOT EXISTS "kokoro" (
 	PRIMARY KEY("kokoro"),
 	FOREIGN KEY("keitou") REFERENCES "keitou"("keitou") ON UPDATE CASCADE ON DELETE RESTRICT
 ) STRICT;
+CREATE TABLE IF NOT EXISTS "kokoro_grade" (
+	"kokoro_grade"	TEXT NOT NULL UNIQUE,
+	"order"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("kokoro_grade")
+);
