@@ -10,7 +10,7 @@ sqlite3 $1 <<!
 .load ./pivotvtab 
 .headers on
 .mode csv
-.output data.sqlite3.$T.csv
+.output data/data.sqlite3.$T.csv
 select * from $T;
 !
 
