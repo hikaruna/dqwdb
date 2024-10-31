@@ -79,14 +79,6 @@ CREATE TABLE IF NOT EXISTS "zyoutaiizyou" (
 	"order"	INTEGER NOT NULL UNIQUE,
 	PRIMARY KEY("zyoutaiizyou")
 ) STRICT;
-CREATE TABLE IF NOT EXISTS "kokoro" (
-	"no"	INTEGER NOT NULL UNIQUE,
-	"kokoro"	TEXT NOT NULL,
-	"cost"	INTEGER NOT NULL,
-	"keitou"	TEXT,
-	PRIMARY KEY("kokoro"),
-	FOREIGN KEY("keitou") REFERENCES "keitou"("keitou") ON UPDATE CASCADE ON DELETE RESTRICT
-) STRICT;
 CREATE TABLE IF NOT EXISTS "kokoro_grade" (
 	"kokoro_grade"	TEXT NOT NULL UNIQUE,
 	"order"	INTEGER NOT NULL UNIQUE,
@@ -97,7 +89,8 @@ CREATE VIRTUAL TABLE v_item USING pivot_vtab (
   (SELECT DISTINCT item from item),
   (SELECT DISTINCT zokusei, zokusei FROM zokusei),
   (SELECT 'null')
-);
+)
+/* v_item(item,"イオ","ギラ","ザバ","ジバリア","デイン","ドルマ","バギ","ヒャド","メラ") */;
 CREATE VIEW v_item_skill_tokusyukouka AS
   SELECT * FROM item
   JOIN item_skill_tokusyukouka
@@ -376,7 +369,8 @@ WHERE remain != ''
 SELECT
  soubi
  , fld AS skill_tokusyukouka_intermate
-FROM split;
+FROM split
+/* soubi_skill_tokusyukouka_intermate(soubi,skill_tokusyukouka_intermate) */;
 CREATE TABLE IF NOT EXISTS "zyoutaiizyou_group" (
 	"zyoutaiizyou_group"	TEXT NOT NULL,
 	"order"	INTEGER NOT NULL UNIQUE,
@@ -477,7 +471,8 @@ SELECT
  , genkaitoppa_level
 
  FROM for_debugg
- order by soubi;
+ order by soubi
+/* soubi_skill_tokusyukouka(soubi,skill_tokusyukouka,hosei_per,hosei_value,condition,genkaitoppa_level) */;
 CREATE VIEW soubi_hosei AS
 
 WITH zyoutaiizyou_kouka AS (
@@ -686,4 +681,5 @@ SELECT soubi
 , sum("ふきとばし耐性") AS "ふきとばし耐性"
 FROM table_a
 GROUP BY soubi
-order by soubi, skill_tokusyukouka;
+order by soubi, skill_tokusyukouka
+/* soubi_hosei(soubi,"全属性ダメージ","メラ属性ダメージ","ギラ属性ダメージ","ヒャド属性ダメージ","バギ属性ダメージ","イオ属性ダメージ","ドルマ属性ダメージ","デイン属性ダメージ","ジバリア属性ダメージ","メラ属性斬撃・体技ダメージ","ギラ属性斬撃・体技ダメージ","ヒャド属性斬撃・体技ダメージ","バギ属性斬撃・体技ダメージ","イオ属性斬撃・体技ダメージ","ドルマ属性斬撃・体技ダメージ","デイン属性斬撃・体技ダメージ","ジバリア属性斬撃・体技ダメージ","メラ属性じゅもんダメージ","ギラ属性じゅもんダメージ","ヒャド属性じゅもんダメージ","バギ属性じゅもんダメージ","イオ属性じゅもんダメージ","ドルマ属性じゅもんダメージ","デイン属性じゅもんダメージ","ジバリア属性じゅもんダメージ","スライム系へのダメージ","けもの系へのダメージ","ドラゴン系へのダメージ","虫系へのダメージ","鳥系へのダメージ","植物系へのダメージ","物質系へのダメージ","マシン系へのダメージ","ゾンビ系へのダメージ","悪魔系へのダメージ","エレメント系へのダメージ","怪人系へのダメージ","水系へのダメージ","？？？？系へのダメージ","スキルHP回復効果","とくぎHP回復効果","じゅもんHP回復効果","みかわし率","全属性耐性","メラ属性耐性","ギラ属性耐性","ヒャド属性耐性","バギ属性耐性","イオ属性耐性","ドルマ属性耐性","デイン属性耐性","ジバリア属性耐性","スライム系への耐性","けもの系への耐性","ドラゴン系への耐性","虫系への耐性","鳥系への耐性","植物系への耐性","物質系への耐性","マシン系への耐性","ゾンビ系への耐性","悪魔系への耐性","エレメント系への耐性","怪人系への耐性","水系への耐性","？？？？系への耐性","すべての状態異常耐性","毒耐性","麻痺耐性","眠り耐性","混乱耐性","封印耐性","幻惑耐性","呪い耐性","魅了耐性","怯え耐性","転び耐性","踊り耐性","縛り耐性","石化耐性","ブレス封じ耐性","感電耐性","悪い状態変化耐性","攻撃減耐性","守備減耐性","すばやさ減耐性","じゅもん攻撃減耐性","じゅもん耐性減耐性","即死耐性","ふきとばし耐性") */;
