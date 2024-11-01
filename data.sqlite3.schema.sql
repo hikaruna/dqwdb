@@ -13,20 +13,10 @@ CREATE TABLE IF NOT EXISTS "zyoutaiizyou" (
 	"order"	INTEGER NOT NULL UNIQUE,
 	PRIMARY KEY("zyoutaiizyou")
 ) STRICT;
-CREATE TABLE IF NOT EXISTS "kouka" (
-	"kouka"	TEXT NOT NULL,
-	"order"	INTEGER NOT NULL UNIQUE,
-	PRIMARY KEY("kouka")
-) STRICT;
 CREATE TABLE IF NOT EXISTS "zyoutaihenka" (
 	"zyoutaihenka"	TEXT NOT NULL,
 	"order"	INT NOT NULL UNIQUE,
 	PRIMARY KEY("zyoutaihenka")
-) STRICT;
-CREATE TABLE IF NOT EXISTS "zyoutaihenka_group" (
-	"zyoutaihenka_group"	TEXT NOT NULL,
-	"order"	INT NOT NULL UNIQUE,
-	PRIMARY KEY("zyoutaihenka_group")
 ) STRICT;
 CREATE TABLE IF NOT EXISTS "zyoutaihenka_group_zyoutaihenka" (
 	"zyoutaihenka_group"	TEXT NOT NULL,
@@ -34,11 +24,6 @@ CREATE TABLE IF NOT EXISTS "zyoutaihenka_group_zyoutaihenka" (
 	PRIMARY KEY("zyoutaihenka_group","zyoutaihenka"),
 	FOREIGN KEY("zyoutaihenka") REFERENCES "zyoutaihenka"("zyoutaihenka") ON UPDATE RESTRICT ON DELETE RESTRICT,
 	FOREIGN KEY("zyoutaihenka_group") REFERENCES "zyoutaihenka_group"("zyoutaihenka_group") ON UPDATE RESTRICT ON DELETE RESTRICT
-) STRICT;
-CREATE TABLE IF NOT EXISTS "zyoutaiizyou_group" (
-	"zyoutaiizyou_group"	TEXT NOT NULL,
-	"order"	INTEGER NOT NULL UNIQUE,
-	PRIMARY KEY("zyoutaiizyou_group")
 ) STRICT;
 CREATE TABLE IF NOT EXISTS "zyoutaiizyou_group_zyoutaiizyou" (
 	"zyoutaiizyou_group"	TEXT NOT NULL,
@@ -54,6 +39,54 @@ CREATE TABLE IF NOT EXISTS "soubi" (
 ) STRICT;
 CREATE TABLE sqlite_stat1(tbl,idx,stat);
 CREATE TABLE sqlite_stat4(tbl,idx,neq,nlt,ndlt,sample);
+CREATE TABLE IF NOT EXISTS "sonota" (
+	"sonota"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("sonota")
+) STRICT;
+CREATE TABLE IF NOT EXISTS "kouka" (
+	"kouka"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	"table_order"	INTEGER NOT NULL UNIQUE,
+	"tokusyukouka_text"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("kouka")
+) STRICT;
+CREATE TABLE IF NOT EXISTS "zyoutaiizyou_group" (
+	"zyoutaiizyou_group"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	"tokusyukouka_text"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("zyoutaiizyou_group")
+) STRICT;
+CREATE TABLE IF NOT EXISTS "zyoutaihenka_group" (
+	"zyoutaihenka_group"	TEXT NOT NULL,
+	"order"	INT NOT NULL UNIQUE,
+	"tokusyukouka_text"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("zyoutaihenka_group")
+) STRICT;
+CREATE TABLE IF NOT EXISTS "taisyou" (
+	"taisyou"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	"table_order"	INTEGER NOT NULL UNIQUE,
+	"tokusyukouka_text"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("taisyou")
+) STRICT;
+CREATE TABLE IF NOT EXISTS "zokusei_group" (
+	"zokusei_group"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("zokusei_group")
+) STRICT;
+CREATE TABLE IF NOT EXISTS "kisoparameter" (
+	"kisoparameter"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	"tokusyukouka_text"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("kisoparameter")
+) STRICT;
+CREATE TABLE IF NOT EXISTS "kakuritu" (
+	"kakuritu"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	"tokusyukouka_text"	TEXT NOT NULL UNIQUE,
+	PRIMARY KEY("kakuritu")
+) STRICT;
 CREATE VIEW soubi_skill_tokusyukouka AS
 WITH
  genkaitoppa_unwrap AS (
@@ -354,176 +387,6 @@ FROM table_a
 GROUP BY soubi
 order by soubi, skill_tokusyukouka
 /* soubi_hosei(soubi,"全属性ダメージ","メラ属性ダメージ","ギラ属性ダメージ","ヒャド属性ダメージ","バギ属性ダメージ","イオ属性ダメージ","ドルマ属性ダメージ","デイン属性ダメージ","ジバリア属性ダメージ","メラ属性斬撃・体技ダメージ","ギラ属性斬撃・体技ダメージ","ヒャド属性斬撃・体技ダメージ","バギ属性斬撃・体技ダメージ","イオ属性斬撃・体技ダメージ","ドルマ属性斬撃・体技ダメージ","デイン属性斬撃・体技ダメージ","ジバリア属性斬撃・体技ダメージ","メラ属性じゅもんダメージ","ギラ属性じゅもんダメージ","ヒャド属性じゅもんダメージ","バギ属性じゅもんダメージ","イオ属性じゅもんダメージ","ドルマ属性じゅもんダメージ","デイン属性じゅもんダメージ","ジバリア属性じゅもんダメージ","スライム系へのダメージ","けもの系へのダメージ","ドラゴン系へのダメージ","虫系へのダメージ","鳥系へのダメージ","植物系へのダメージ","物質系へのダメージ","マシン系へのダメージ","ゾンビ系へのダメージ","悪魔系へのダメージ","エレメント系へのダメージ","怪人系へのダメージ","水系へのダメージ","？？？？系へのダメージ","スキルHP回復効果","とくぎHP回復効果","じゅもんHP回復効果","みかわし率","全属性耐性","メラ属性耐性","ギラ属性耐性","ヒャド属性耐性","バギ属性耐性","イオ属性耐性","ドルマ属性耐性","デイン属性耐性","ジバリア属性耐性","スライム系への耐性","けもの系への耐性","ドラゴン系への耐性","虫系への耐性","鳥系への耐性","植物系への耐性","物質系への耐性","マシン系への耐性","ゾンビ系への耐性","悪魔系への耐性","エレメント系への耐性","怪人系への耐性","水系への耐性","？？？？系への耐性","すべての状態異常耐性","毒耐性","麻痺耐性","眠り耐性","混乱耐性","封印耐性","幻惑耐性","呪い耐性","魅了耐性","怯え耐性","転び耐性","踊り耐性","縛り耐性","石化耐性","ブレス封じ耐性","感電耐性","悪い状態変化耐性","攻撃減耐性","守備減耐性","すばやさ減耐性","じゅもん攻撃減耐性","じゅもん耐性減耐性","即死耐性","ふきとばし耐性") */;
-CREATE TABLE IF NOT EXISTS "taisyou" (
-	"taisyou"	TEXT NOT NULL,
-	"order"	INTEGER NOT NULL UNIQUE,
-	PRIMARY KEY("taisyou")
-) STRICT;
-CREATE VIEW zokusei_group AS
-  SELECT *
-  FROM zokusei
-  UNION ALL
-  SELECT "全" AS zokusei, 0 AS `order`
-/* zokusei_group(zokusei,"order") */;
-CREATE TABLE IF NOT EXISTS "kisoparameter" (
-	"kisoparameter"	TEXT NOT NULL,
-	"order"	INTEGER NOT NULL UNIQUE,
-	PRIMARY KEY("kisoparameter")
-) STRICT;
-CREATE TABLE IF NOT EXISTS "kakuritu" (
-	"kakuritu"	TEXT NOT NULL,
-	"order"	INTEGER NOT NULL UNIQUE,
-	PRIMARY KEY("kakuritu")
-) STRICT;
-CREATE VIEW tokusyukouka_variation AS
-WITH t_kisoparameter AS(
-SELECT "" AS kouka
-, "" AS taisyou
-, "" AS zokusei
-, "" AS keitou
-, "" AS zyoutaiizyou
-, CASE 
-  WHEN kisoparameter IN("HP","MP") THEN "さいだい"||kisoparameter
-  WHEN kisoparameter = "こうげき力" THEN "攻撃力"
-  WHEN kisoparameter = "しゅび力" THEN "守備力"
-  ELSE kisoparameter END
- AS tokusyukouka
-
-FROM kisoparameter
-)
-,
-t_kakuritu AS(
-SELECT "" AS kouka
-, "" AS taisyou
-, "" AS zokusei
-, "" AS keitou
-, "" AS zyoutaiizyou
-, CASE kakuritu WHEN "暴走率" THEN "魔力の"||kakuritu ELSE kakuritu END AS tokusyukouka
-
-FROM kakuritu
-)
-
-,
-per_hosei_tokusyukouka AS (
-
-SELECT kouka
-, taisyou
-, zokusei
-, keitou
-, zyoutaiizyou
-,(
-(CASE keitou != "" WHEN TRUE THEN keitou||"への" ELSE ''END)
-||(CASE zokusei != "" WHEN TRUE THEN zokusei||"属性" ELSE ''END)
-||(CASE zyoutaiizyou WHEN "全" THEN "すべての状態異常" ELSE zyoutaiizyou END)
-||(CASE taisyou IN("斬撃・体技","斬撃","体技") AND zokusei = "" WHEN TRUE THEN "スキルの"||taisyou ELSE taisyou END)
-||(CASE kouka
-   WHEN "ダメージアップ" THEN "ダメージ"
-   WHEN "HP回復" THEN "HP回復効果"
-   ELSE kouka END)
-) AS tokusyukouka
-FROM kouka
-CROSS JOIN (
-  SELECT * FROM taisyou
-  UNION ALL
-  SELECT '' AS taisyou, 0 AS `order`
-) AS taisyou
-CROSS JOIN (
-  SELECT '' AS zokusei, 1 AS `order`
-  UNION ALL
-  SELECT '全' AS zokusei, 2 AS `order`
-  UNION ALL
-  SELECT zokusei, `order`+2 AS `order` FROM zokusei
-) AS zokusei
-CROSS JOIN (
-  SELECT * FROM keitou
-  UNION ALL
-  SELECT '' AS keitou, 0 AS `order`
-) AS keitou
-CROSS JOIN (
-  SELECT '' AS zyoutaiizyou, 1 AS `order`
-  UNION ALL
-  SELECT '全' AS zyoutaiizyou, 2 AS `order`
-  UNION ALL
-  SELECT zyoutaiizyou, `order`+2 AS `order` FROM zyoutaiizyou
-) AS zyoutaiizyou
-WHERE NOT(
-  kouka = ""
-  OR
-  (taisyou = "" AND zokusei = "" AND keitou = "" AND zyoutaiizyou = "")
-  OR
-  (taisyou != "" AND keitou != "")
-  OR
-  (zokusei != "" AND keitou != "")
-  OR
-  (zokusei != "" AND taisyou = "スキル")
-  OR
-  (
-	kouka = "耐性" AND (
-	  (taisyou != "" AND zokusei != "")
-	  OR
-	  (zokusei != "" AND keitou != "")
-	  OR
-	  (keitou != "" AND taisyou != "")
-	)
-  )
-  OR
-  (
-	kouka = "HP回復" AND (
-	  zokusei != ""
-	  OR
-	  keitou != ""
-	  OR
-	  taisyou NOT IN("スキル","じゅもん","とくぎ")
-	)
-  )
-  OR
-  (
-    kouka = "成功率" AND (
-	  (taisyou = "" AND zokusei = "" AND keitou = "" AND zyoutaiizyou = "")
-	  OR
-	  taisyou != ""
-	  OR
-	  zokusei != ""
-	  OR
-	  keitou != ""
-	)
-  )
-  OR
-  (kouka != "HP回復" AND taisyou IN("どうぐ","とくぎ"))
-  OR
-  (zyoutaiizyou != "" AND(
-    kouka NOT IN("成功率","耐性")
-	OR
-	taisyou != ""
-	OR
-	zokusei != ""
-	OR
-	keitou != ""
-  ))
-)
-order by
-kouka.`order`
-,
-(
-  CASE TRUE
-  WHEN taisyou != "" AND zokusei = "" AND keitou = "" THEN 1
-  WHEN taisyou = ""  AND zokusei != ""  AND keitou = "" THEN 2
-  WHEN taisyou != "" AND zokusei != ""  AND keitou = "" THEN 3
-  WHEN taisyou != "" AND zokusei = ""  AND keitou = "" AND zyoutaiizyou != "" THEN 4
-  ELSE 99
-  END
-)
-, taisyou.`order`
-, zokusei.`order`
-, keitou.`order`
-)
-
-SELECT * FROM t_kisoparameter
-UNION ALL
-SELECT * FROM t_kakuritu
-UNION ALL
-SELECT * FROM per_hosei_tokusyukouka
-/* tokusyukouka_variation(kouka,taisyou,zokusei,keitou,zyoutaiizyou,tokusyukouka) */;
 CREATE VIEW soubi_skill_tokusyukouka_intermate AS
 WITH RECURSIVE split(soubi,idx,fld,remain) AS (
 WITH
@@ -605,3 +468,234 @@ SELECT
  , fld AS skill_tokusyukouka_intermate
 FROM split
 /* soubi_skill_tokusyukouka_intermate(soubi,skill_tokusyukouka_intermate) */;
+CREATE VIEW taisyou_hosei_tokusyukouka_variation AS
+SELECT kouka
+, kouka.table_order AS kouka_order
+, taisyou
+, taisyou.table_order AS taisyou_order
+, taisyou.tokusyukouka_text
+, taisyou.tokusyukouka_text||kouka.tokusyukouka_text AS tokusyukouka
+FROM taisyou
+CROSS JOIN kouka
+WHERE NOT(
+  kouka = "ダメージアップ" AND taisyou IN("とくぎ","どうぐ")
+  OR
+  kouka = "HP回復" AND taisyou NOT IN("スキル","じゅもん","とくぎ")
+  OR
+  kouka = "成功率"
+  OR
+  kouka = "耐性" AND taisyou NOT IN("斬撃・体技","ブレス","じゅもん")
+)
+order by kouka_order, taisyou_order
+/* taisyou_hosei_tokusyukouka_variation(kouka,kouka_order,taisyou,taisyou_order,tokusyukouka_text,tokusyukouka) */;
+CREATE VIEW zyoutai_hosei_tokusyukouka_variation AS
+
+SELECT kouka
+, kouka.table_order AS kouka_order
+, zyoutaiizyou_group
+, zyoutaiizyou_group.`order` AS zyoutaiizyou_group_order
+, zyoutaihenka_group
+, zyoutaihenka_group.`order` AS zyoutaihenka_group_order
+, sonota
+, sonota.`order` AS sonota_order
+, zyoutaiizyou_group.tokusyukouka_text
+||zyoutaihenka_group.tokusyukouka_text
+||sonota
+||kouka.tokusyukouka_text
+AS tokusyukouka
+
+
+FROM (
+
+SELECT zyoutaiizyou_group
+, zyoutaiizyou_group.`order` AS `order`
+, tokusyukouka_text
+FROM zyoutaiizyou_group
+UNION ALL
+SELECT ""
+, 99
+, ""
+) AS zyoutaiizyou_group
+
+
+CROSS JOIN (
+
+SELECT zyoutaihenka_group
+, zyoutaihenka_group.`order` AS `order`
+, tokusyukouka_text
+FROM zyoutaihenka_group
+UNION ALL
+SELECT ""
+, 99
+, ""
+) AS zyoutaihenka_group
+
+CROSS JOIN (
+
+SELECT sonota
+, sonota.`order` AS `order`
+FROM sonota
+UNION ALL
+SELECT ""
+, 99
+) AS sonota
+
+
+CROSS JOIN kouka
+WHERE
+  (
+    (zyoutaiizyou_group != "" AND zyoutaihenka_group = "" AND sonota = "")
+    OR
+    (zyoutaiizyou_group = "" AND zyoutaihenka_group != "" AND sonota = "")
+    OR
+    (zyoutaiizyou_group = "" AND zyoutaihenka_group = "" AND sonota != "")
+   )
+ AND
+ NOT(zyoutaiizyou_group = "" AND zyoutaihenka_group = "" AND sonota = "")
+ AND kouka IN("成功率","耐性")
+ AND NOT(zyoutaihenka_group = "悪状態変化" AND kouka = "成功率")
+ AND NOT(zyoutaihenka_group = "一部の状態変化" AND kouka = "耐性")
+order by kouka.table_order, zyoutaiizyou_group.`order`, zyoutaihenka_group.`order`
+/* zyoutai_hosei_tokusyukouka_variation(kouka,kouka_order,zyoutaiizyou_group,zyoutaiizyou_group_order,zyoutaihenka_group,zyoutaihenka_group_order,sonota,sonota_order,tokusyukouka) */;
+CREATE VIEW per_hosei_tokusyukouka_variation AS
+
+WITH intermate AS (
+
+SELECT kouka
+, kouka_order
+, taisyou
+, taisyou_order+1 AS taisyou_order
+, "" AS zokusei
+, 1 AS zokusei_order
+, "" AS zyoutaiizyou
+, "" AS zyoutaiizyou_order
+, "" AS zyoutaihenka
+, "" AS zyoutaihenka_order
+, "" AS sonota
+, "" AS sonota_order
+, tokusyukouka
+
+FROM taisyou_hosei_tokusyukouka_variation
+
+
+UNION ALL
+SELECT kouka
+, kouka_order
+, taisyou
+, taisyou_order
+, zokusei
+, zokusei_order+1 AS zokusei_order
+, "" AS zyoutaiizyou
+, "" AS zyoutaiizyou_order
+, "" AS zyoutaihenka
+, "" AS zyoutaihenka_order
+, "" AS sonota
+, "" AS sonota_order
+, tokusyukouka
+
+FROM zokusei_hosei_tokusyukouka_variation
+
+
+UNION ALL
+SELECT kouka
+, "" AS kouka_order
+, "" AS taisyou
+, "" AS taisyou_order
+, "" AS zokusei
+, 1 AS zokusei_order
+, zyoutaiizyou_group AS zyoutaiizyou
+, zyoutaiizyou_group_order AS zyoutaiizyou_order
+, zyoutaihenka_group AS zyoutaihenka
+, zyoutaihenka_group_order AS zyoutaihenka_order
+, sonota
+, sonota_order
+, tokusyukouka
+
+FROM zyoutai_hosei_tokusyukouka_variation
+)
+
+SELECT * FROM intermate
+order by
+kouka_order
+,
+(
+CASE
+WHEN taisyou != "" AND zokusei = "" THEN 1
+ELSE 99
+END
+)
+,
+taisyou_order
+,
+zokusei_order
+,
+zyoutaiizyou_order
+,
+zyoutaihenka_order
+,
+sonota_order
+/* per_hosei_tokusyukouka_variation(kouka,kouka_order,taisyou,taisyou_order,zokusei,zokusei_order,zyoutaiizyou,zyoutaiizyou_order,zyoutaihenka,zyoutaihenka_order,sonota,sonota_order,tokusyukouka) */;
+CREATE VIEW value_hosei_tokusyukouka_variation AS
+
+SELECT kisoparameter
+, `order` AS kisoparameter_order
+, "" AS kakuritu
+, "" AS kakuritu_order
+, tokusyukouka_text AS tokusyukouka
+FROM kisoparameter
+
+UNION ALL
+SELECT "" AS kisoparameter
+, "" AS kisoparameter_order
+, kakuritu
+, `order` AS kakuritu_order
+, tokusyukouka_text AS tokusyukouka
+FROM kakuritu
+/* value_hosei_tokusyukouka_variation(kisoparameter,kisoparameter_order,kakuritu,kakuritu_order,tokusyukouka) */;
+CREATE VIEW zokusei_hosei_tokusyukouka_variation AS
+
+
+SELECT kouka
+, kouka.table_order AS kouka_order
+, taisyou
+, taisyou.table_order AS taisyou_order
+, zokusei_group AS zokusei
+, zokusei_group.`order` AS zokusei_order
+, zokusei_group||"属性"||taisyou.tokusyukouka_text||kouka.tokusyukouka_text AS tokusyukouka
+FROM zokusei_group
+CROSS JOIN kouka
+
+CROSS JOIN (
+SELECT taisyou
+, taisyou.tokusyukouka_text
+, table_order+1 AS table_order
+FROM taisyou
+UNION ALL
+SELECT ""
+, ""
+, 1 AS table_order
+) AS taisyou
+
+WHERE taisyou IN("","斬撃・体技","じゅもん","ブレス") AND kouka IN("ダメージアップ","耐性")
+AND NOT(kouka = "耐性" AND taisyou != "") 
+order by kouka_order, taisyou_order, zokusei_order
+/* zokusei_hosei_tokusyukouka_variation(kouka,kouka_order,taisyou,taisyou_order,zokusei,zokusei_order,tokusyukouka) */;
+CREATE VIEW hosei_tokusyukouka_variation AS
+
+SELECT tokusyukouka
+FROM value_hosei_tokusyukouka_variation
+
+
+UNION ALL
+SELECT
+/*
+"" AS kisoparameter
+, "" AS kisoparameter_order
+, "" AS kakuritu
+, "" AS kakuritu_order
+,
+*/ 
+tokusyukouka
+
+FROM per_hosei_tokusyukouka_variation
+/* hosei_tokusyukouka_variation(tokusyukouka) */;
