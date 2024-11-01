@@ -47,10 +47,6 @@ CREATE TABLE IF NOT EXISTS "zyoutaiizyou_group_zyoutaiizyou" (
 	FOREIGN KEY("zyoutaiizyou") REFERENCES "zyoutaiizyou"("zyoutaiizyou") ON UPDATE RESTRICT ON DELETE RESTRICT,
 	FOREIGN KEY("zyoutaiizyou_group") REFERENCES "zyoutaiizyou_group"("zyoutaiizyou_group") ON UPDATE RESTRICT ON DELETE RESTRICT
 ) STRICT;
-CREATE TABLE IF NOT EXISTS "skill_type" (
-	"skill_type"	TEXT NOT NULL,
-	PRIMARY KEY("skill_type")
-) STRICT;
 CREATE TABLE IF NOT EXISTS "soubi" (
 	"soubi"	TEXT NOT NULL,
 	"skill_tokusyukouka_text"	TEXT NOT NULL,
@@ -58,89 +54,6 @@ CREATE TABLE IF NOT EXISTS "soubi" (
 ) STRICT;
 CREATE TABLE sqlite_stat1(tbl,idx,stat);
 CREATE TABLE sqlite_stat4(tbl,idx,neq,nlt,ndlt,sample);
-CREATE VIEW soubi_skill_tokusyukouka_intermate AS
-
-
-WITH RECURSIVE split(soubi,idx,fld,remain) AS (
-WITH
- kousei_filtered AS (
- SELECT
-  soubi
-  , replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-    replace(
-	regexp_replace(
-	regexp_replace(
-	  skill_tokusyukouka_text
-	,'(スライム系|けもの系|ドラゴン系|虫系|鳥系|植物系|物質系|マシン系|ゾンビ系|悪魔系|エレメント系|怪人系|水系|\?\?\?\?系)(ダメージ|耐性)','$1への$2')
-	,'(?:^|\n)スキルのHP回復効果','スキルHP回復効果')
-	,'？？？？', '????')
-	, '＋', '+')
-	, '％', '%')
-	, '０', '0')
-	, '１', '1')
-	, '２', '2')
-	, '３', '3')
-	, '４', '4')
-	, '５', '5')
-	, '６', '6')
-	, '７', '7')
-	, '８', '8')
-	, '９', '9')
-	, '擊', '撃')
-	, '―', 'ー')
-	, '練成', '錬成')
-	, '特別演出開放', '特別演出解放')
-	, '付与する', '与える')
-	, '（', '(')
-	, '）', ')')
-	, 'とくぎダメージ', '斬撃・体技ダメージ')
-	, 'ずべて', 'すべて')
-   AS val
- FROM soubi
-)
-
-
-SELECT
-  soubi
-  , instr(val,char(10)) as idx
-  ,substr(val,1,instr(val,char(10))-1) as fld
-  ,substr(val,instr(val,char(10))+1)||char(10) as remain
-FROM kousei_filtered
-
-UNION ALL SELECT
-  soubi
-  , instr(remain,char(10)) as idx
-  ,substr(remain,1,instr(remain,char(10))-1) as fld
-  ,substr(remain,instr(remain,char(10))+1) as remain
-FROM split
-WHERE remain != ''
-)
-
-SELECT
- soubi
- , fld AS skill_tokusyukouka_intermate
-FROM split
-/* soubi_skill_tokusyukouka_intermate(soubi,skill_tokusyukouka_intermate) */;
 CREATE VIEW soubi_skill_tokusyukouka AS
 WITH
  genkaitoppa_unwrap AS (
@@ -253,96 +166,96 @@ table_a AS (
 SELECT soubi
 , skill_tokusyukouka
 , sum(hosei_per)
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "全属性ダメージ" THEN hosei_per END), 0) AS "全属性ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "メラ属性ダメージ" THEN hosei_per END), 0) AS "メラ属性ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ギラ属性ダメージ" THEN hosei_per END), 0) AS "ギラ属性ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ヒャド属性ダメージ" THEN hosei_per END), 0) AS "ヒャド属性ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "バギ属性ダメージ" THEN hosei_per END), 0) AS "バギ属性ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "イオ属性ダメージ" THEN hosei_per END), 0) AS "イオ属性ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ドルマ属性ダメージ" THEN hosei_per END), 0) AS "ドルマ属性ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "デイン属性ダメージ" THEN hosei_per END), 0) AS "デイン属性ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ジバリア属性ダメージ" THEN hosei_per END), 0) AS "ジバリア属性ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "メラ属性斬撃・体技ダメージ" THEN hosei_per END), 0) AS "メラ属性斬撃・体技ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ギラ属性斬撃・体技ダメージ" THEN hosei_per END), 0) AS "ギラ属性斬撃・体技ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ヒャド属性斬撃・体技ダメージ" THEN hosei_per END), 0) AS "ヒャド属性斬撃・体技ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "バギ属性斬撃・体技ダメージ" THEN hosei_per END), 0) AS "バギ属性斬撃・体技ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "イオ属性斬撃・体技ダメージ" THEN hosei_per END), 0) AS "イオ属性斬撃・体技ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ドルマ属性斬撃・体技ダメージ" THEN hosei_per END), 0) AS "ドルマ属性斬撃・体技ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "デイン属性斬撃・体技ダメージ" THEN hosei_per END), 0) AS "デイン属性斬撃・体技ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ジバリア属性斬撃・体技ダメージ" THEN hosei_per END), 0) AS "ジバリア属性斬撃・体技ダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "メラ属性じゅもんダメージ" THEN hosei_per END), 0) AS "メラ属性じゅもんダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ギラ属性じゅもんダメージ" THEN hosei_per END), 0) AS "ギラ属性じゅもんダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ヒャド属性じゅもんダメージ" THEN hosei_per END), 0) AS "ヒャド属性じゅもんダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "バギ属性じゅもんダメージ" THEN hosei_per END), 0) AS "バギ属性じゅもんダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "イオ属性じゅもんダメージ" THEN hosei_per END), 0) AS "イオ属性じゅもんダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ドルマ属性じゅもんダメージ" THEN hosei_per END), 0) AS "ドルマ属性じゅもんダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "デイン属性じゅもんダメージ" THEN hosei_per END), 0) AS "デイン属性じゅもんダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ジバリア属性じゅもんダメージ" THEN hosei_per END), 0) AS "ジバリア属性じゅもんダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "スライム系へのダメージ" THEN hosei_per END), 0) AS "スライム系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "けもの系へのダメージ" THEN hosei_per END), 0) AS "けもの系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ドラゴン系へのダメージ" THEN hosei_per END), 0) AS "ドラゴン系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "虫系へのダメージ" THEN hosei_per END), 0) AS "虫系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "鳥系へのダメージ" THEN hosei_per END), 0) AS "鳥系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "植物系へのダメージ" THEN hosei_per END), 0) AS "植物系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "物質系へのダメージ" THEN hosei_per END), 0) AS "物質系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "マシン系へのダメージ" THEN hosei_per END), 0) AS "マシン系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ゾンビ系へのダメージ" THEN hosei_per END), 0) AS "ゾンビ系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "悪魔系へのダメージ" THEN hosei_per END), 0) AS "悪魔系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "エレメント系へのダメージ" THEN hosei_per END), 0) AS "エレメント系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "怪人系へのダメージ" THEN hosei_per END), 0) AS "怪人系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "水系へのダメージ" THEN hosei_per END), 0) AS "水系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "？？？？系へのダメージ" THEN hosei_per END), 0) AS "？？？？系へのダメージ"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "スキルHP回復効果" THEN hosei_per END), 0) AS "スキルHP回復効果"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "とくぎHP回復効果" THEN hosei_per END), 0) AS "とくぎHP回復効果"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "じゅもんHP回復効果" THEN hosei_per END), 0) AS "じゅもんHP回復効果"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "みかわし率" THEN hosei_per END), 0) AS "みかわし率"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "全属性耐性" THEN hosei_per END), 0) AS "全属性耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "メラ属性耐性" THEN hosei_per END), 0) AS "メラ属性耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ギラ属性耐性" THEN hosei_per END), 0) AS "ギラ属性耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ヒャド属性耐性" THEN hosei_per END), 0) AS "ヒャド属性耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "バギ属性耐性" THEN hosei_per END), 0) AS "バギ属性耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "イオ属性耐性" THEN hosei_per END), 0) AS "イオ属性耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ドルマ属性耐性" THEN hosei_per END), 0) AS "ドルマ属性耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "デイン属性耐性" THEN hosei_per END), 0) AS "デイン属性耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ジバリア属性耐性" THEN hosei_per END), 0) AS "ジバリア属性耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "スライム系への耐性" THEN hosei_per END), 0) AS "スライム系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "けもの系への耐性" THEN hosei_per END), 0) AS "けもの系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ドラゴン系への耐性" THEN hosei_per END), 0) AS "ドラゴン系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "虫系への耐性" THEN hosei_per END), 0) AS "虫系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "鳥系への耐性" THEN hosei_per END), 0) AS "鳥系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "植物系への耐性" THEN hosei_per END), 0) AS "植物系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "物質系への耐性" THEN hosei_per END), 0) AS "物質系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "マシン系への耐性" THEN hosei_per END), 0) AS "マシン系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ゾンビ系への耐性" THEN hosei_per END), 0) AS "ゾンビ系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "悪魔系への耐性" THEN hosei_per END), 0) AS "悪魔系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "エレメント系への耐性" THEN hosei_per END), 0) AS "エレメント系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "怪人系への耐性" THEN hosei_per END), 0) AS "怪人系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "水系への耐性" THEN hosei_per END), 0) AS "水系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "？？？？系への耐性" THEN hosei_per END), 0) AS "？？？？系への耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "すべての状態異常耐性" THEN hosei_per END), 0) AS "すべての状態異常耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "毒耐性" THEN hosei_per END), 0) AS "毒耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "麻痺耐性" THEN hosei_per END), 0) AS "麻痺耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "眠り耐性" THEN hosei_per END), 0) AS "眠り耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "混乱耐性" THEN hosei_per END), 0) AS "混乱耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "封印耐性" THEN hosei_per END), 0) AS "封印耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "幻惑耐性" THEN hosei_per END), 0) AS "幻惑耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "呪い耐性" THEN hosei_per END), 0) AS "呪い耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "魅了耐性" THEN hosei_per END), 0) AS "魅了耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "怯え耐性" THEN hosei_per END), 0) AS "怯え耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "転び耐性" THEN hosei_per END), 0) AS "転び耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "踊り耐性" THEN hosei_per END), 0) AS "踊り耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "縛り耐性" THEN hosei_per END), 0) AS "縛り耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "石化耐性" THEN hosei_per END), 0) AS "石化耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ブレス封じ耐性" THEN hosei_per END), 0) AS "ブレス封じ耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "感電耐性" THEN hosei_per END), 0) AS "感電耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "悪い状態変化耐性" THEN hosei_per END), 0) AS "悪い状態変化耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "攻撃減耐性" THEN hosei_per END), 0) AS "攻撃減耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "守備減耐性" THEN hosei_per END), 0) AS "守備減耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "すばやさ減耐性" THEN hosei_per END), 0) AS "すばやさ減耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "じゅもん攻撃減耐性" THEN hosei_per END), 0) AS "じゅもん攻撃減耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "じゅもん耐性減耐性" THEN hosei_per END), 0) AS "じゅもん耐性減耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "即死耐性" THEN hosei_per END), 0) AS "即死耐性"
-, coalesce(sum(CASE WHEN skill_tokusyukouka = "ふきとばし耐性" THEN hosei_per END), 0) AS "ふきとばし耐性"FROM soubi_skill_tokusyukouka
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '全属性ダメージ' THEN hosei_per END), 0) AS "全属性ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'メラ属性ダメージ' THEN hosei_per END), 0) AS "メラ属性ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ギラ属性ダメージ' THEN hosei_per END), 0) AS "ギラ属性ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ヒャド属性ダメージ' THEN hosei_per END), 0) AS "ヒャド属性ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'バギ属性ダメージ' THEN hosei_per END), 0) AS "バギ属性ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'イオ属性ダメージ' THEN hosei_per END), 0) AS "イオ属性ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ドルマ属性ダメージ' THEN hosei_per END), 0) AS "ドルマ属性ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'デイン属性ダメージ' THEN hosei_per END), 0) AS "デイン属性ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ジバリア属性ダメージ' THEN hosei_per END), 0) AS "ジバリア属性ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'メラ属性斬撃・体技ダメージ' THEN hosei_per END), 0) AS "メラ属性斬撃・体技ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ギラ属性斬撃・体技ダメージ' THEN hosei_per END), 0) AS "ギラ属性斬撃・体技ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ヒャド属性斬撃・体技ダメージ' THEN hosei_per END), 0) AS "ヒャド属性斬撃・体技ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'バギ属性斬撃・体技ダメージ' THEN hosei_per END), 0) AS "バギ属性斬撃・体技ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'イオ属性斬撃・体技ダメージ' THEN hosei_per END), 0) AS "イオ属性斬撃・体技ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ドルマ属性斬撃・体技ダメージ' THEN hosei_per END), 0) AS "ドルマ属性斬撃・体技ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'デイン属性斬撃・体技ダメージ' THEN hosei_per END), 0) AS "デイン属性斬撃・体技ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ジバリア属性斬撃・体技ダメージ' THEN hosei_per END), 0) AS "ジバリア属性斬撃・体技ダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'メラ属性じゅもんダメージ' THEN hosei_per END), 0) AS "メラ属性じゅもんダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ギラ属性じゅもんダメージ' THEN hosei_per END), 0) AS "ギラ属性じゅもんダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ヒャド属性じゅもんダメージ' THEN hosei_per END), 0) AS "ヒャド属性じゅもんダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'バギ属性じゅもんダメージ' THEN hosei_per END), 0) AS "バギ属性じゅもんダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'イオ属性じゅもんダメージ' THEN hosei_per END), 0) AS "イオ属性じゅもんダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ドルマ属性じゅもんダメージ' THEN hosei_per END), 0) AS "ドルマ属性じゅもんダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'デイン属性じゅもんダメージ' THEN hosei_per END), 0) AS "デイン属性じゅもんダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ジバリア属性じゅもんダメージ' THEN hosei_per END), 0) AS "ジバリア属性じゅもんダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'スライム系へのダメージ' THEN hosei_per END), 0) AS "スライム系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'けもの系へのダメージ' THEN hosei_per END), 0) AS "けもの系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ドラゴン系へのダメージ' THEN hosei_per END), 0) AS "ドラゴン系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '虫系へのダメージ' THEN hosei_per END), 0) AS "虫系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '鳥系へのダメージ' THEN hosei_per END), 0) AS "鳥系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '植物系へのダメージ' THEN hosei_per END), 0) AS "植物系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '物質系へのダメージ' THEN hosei_per END), 0) AS "物質系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'マシン系へのダメージ' THEN hosei_per END), 0) AS "マシン系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ゾンビ系へのダメージ' THEN hosei_per END), 0) AS "ゾンビ系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '悪魔系へのダメージ' THEN hosei_per END), 0) AS "悪魔系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'エレメント系へのダメージ' THEN hosei_per END), 0) AS "エレメント系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '怪人系へのダメージ' THEN hosei_per END), 0) AS "怪人系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '水系へのダメージ' THEN hosei_per END), 0) AS "水系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '？？？？系へのダメージ' THEN hosei_per END), 0) AS "？？？？系へのダメージ"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'スキルHP回復効果' THEN hosei_per END), 0) AS "スキルHP回復効果"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'とくぎHP回復効果' THEN hosei_per END), 0) AS "とくぎHP回復効果"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'じゅもんHP回復効果' THEN hosei_per END), 0) AS "じゅもんHP回復効果"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'みかわし率' THEN hosei_per END), 0) AS "みかわし率"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '全属性耐性' THEN hosei_per END), 0) AS "全属性耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'メラ属性耐性' THEN hosei_per END), 0) AS "メラ属性耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ギラ属性耐性' THEN hosei_per END), 0) AS "ギラ属性耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ヒャド属性耐性' THEN hosei_per END), 0) AS "ヒャド属性耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'バギ属性耐性' THEN hosei_per END), 0) AS "バギ属性耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'イオ属性耐性' THEN hosei_per END), 0) AS "イオ属性耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ドルマ属性耐性' THEN hosei_per END), 0) AS "ドルマ属性耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'デイン属性耐性' THEN hosei_per END), 0) AS "デイン属性耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ジバリア属性耐性' THEN hosei_per END), 0) AS "ジバリア属性耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'スライム系への耐性' THEN hosei_per END), 0) AS "スライム系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'けもの系への耐性' THEN hosei_per END), 0) AS "けもの系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ドラゴン系への耐性' THEN hosei_per END), 0) AS "ドラゴン系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '虫系への耐性' THEN hosei_per END), 0) AS "虫系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '鳥系への耐性' THEN hosei_per END), 0) AS "鳥系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '植物系への耐性' THEN hosei_per END), 0) AS "植物系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '物質系への耐性' THEN hosei_per END), 0) AS "物質系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'マシン系への耐性' THEN hosei_per END), 0) AS "マシン系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ゾンビ系への耐性' THEN hosei_per END), 0) AS "ゾンビ系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '悪魔系への耐性' THEN hosei_per END), 0) AS "悪魔系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'エレメント系への耐性' THEN hosei_per END), 0) AS "エレメント系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '怪人系への耐性' THEN hosei_per END), 0) AS "怪人系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '水系への耐性' THEN hosei_per END), 0) AS "水系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '？？？？系への耐性' THEN hosei_per END), 0) AS "？？？？系への耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'すべての状態異常耐性' THEN hosei_per END), 0) AS "すべての状態異常耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '毒耐性' THEN hosei_per END), 0) AS "毒耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '麻痺耐性' THEN hosei_per END), 0) AS "麻痺耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '眠り耐性' THEN hosei_per END), 0) AS "眠り耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '混乱耐性' THEN hosei_per END), 0) AS "混乱耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '封印耐性' THEN hosei_per END), 0) AS "封印耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '幻惑耐性' THEN hosei_per END), 0) AS "幻惑耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '呪い耐性' THEN hosei_per END), 0) AS "呪い耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '魅了耐性' THEN hosei_per END), 0) AS "魅了耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '怯え耐性' THEN hosei_per END), 0) AS "怯え耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '転び耐性' THEN hosei_per END), 0) AS "転び耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '踊り耐性' THEN hosei_per END), 0) AS "踊り耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '縛り耐性' THEN hosei_per END), 0) AS "縛り耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '石化耐性' THEN hosei_per END), 0) AS "石化耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ブレス封じ耐性' THEN hosei_per END), 0) AS "ブレス封じ耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '感電耐性' THEN hosei_per END), 0) AS "感電耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '悪い状態変化耐性' THEN hosei_per END), 0) AS "悪い状態変化耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '攻撃減耐性' THEN hosei_per END), 0) AS "攻撃減耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '守備減耐性' THEN hosei_per END), 0) AS "守備減耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'すばやさ減耐性' THEN hosei_per END), 0) AS "すばやさ減耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'じゅもん攻撃減耐性' THEN hosei_per END), 0) AS "じゅもん攻撃減耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'じゅもん耐性減耐性' THEN hosei_per END), 0) AS "じゅもん耐性減耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = '即死耐性' THEN hosei_per END), 0) AS "即死耐性"
+, coalesce(sum(CASE WHEN skill_tokusyukouka = 'ふきとばし耐性' THEN hosei_per END), 0) AS "ふきとばし耐性"FROM soubi_skill_tokusyukouka
 GROUP BY skill_tokusyukouka, soubi
 )
 
@@ -441,3 +354,254 @@ FROM table_a
 GROUP BY soubi
 order by soubi, skill_tokusyukouka
 /* soubi_hosei(soubi,"全属性ダメージ","メラ属性ダメージ","ギラ属性ダメージ","ヒャド属性ダメージ","バギ属性ダメージ","イオ属性ダメージ","ドルマ属性ダメージ","デイン属性ダメージ","ジバリア属性ダメージ","メラ属性斬撃・体技ダメージ","ギラ属性斬撃・体技ダメージ","ヒャド属性斬撃・体技ダメージ","バギ属性斬撃・体技ダメージ","イオ属性斬撃・体技ダメージ","ドルマ属性斬撃・体技ダメージ","デイン属性斬撃・体技ダメージ","ジバリア属性斬撃・体技ダメージ","メラ属性じゅもんダメージ","ギラ属性じゅもんダメージ","ヒャド属性じゅもんダメージ","バギ属性じゅもんダメージ","イオ属性じゅもんダメージ","ドルマ属性じゅもんダメージ","デイン属性じゅもんダメージ","ジバリア属性じゅもんダメージ","スライム系へのダメージ","けもの系へのダメージ","ドラゴン系へのダメージ","虫系へのダメージ","鳥系へのダメージ","植物系へのダメージ","物質系へのダメージ","マシン系へのダメージ","ゾンビ系へのダメージ","悪魔系へのダメージ","エレメント系へのダメージ","怪人系へのダメージ","水系へのダメージ","？？？？系へのダメージ","スキルHP回復効果","とくぎHP回復効果","じゅもんHP回復効果","みかわし率","全属性耐性","メラ属性耐性","ギラ属性耐性","ヒャド属性耐性","バギ属性耐性","イオ属性耐性","ドルマ属性耐性","デイン属性耐性","ジバリア属性耐性","スライム系への耐性","けもの系への耐性","ドラゴン系への耐性","虫系への耐性","鳥系への耐性","植物系への耐性","物質系への耐性","マシン系への耐性","ゾンビ系への耐性","悪魔系への耐性","エレメント系への耐性","怪人系への耐性","水系への耐性","？？？？系への耐性","すべての状態異常耐性","毒耐性","麻痺耐性","眠り耐性","混乱耐性","封印耐性","幻惑耐性","呪い耐性","魅了耐性","怯え耐性","転び耐性","踊り耐性","縛り耐性","石化耐性","ブレス封じ耐性","感電耐性","悪い状態変化耐性","攻撃減耐性","守備減耐性","すばやさ減耐性","じゅもん攻撃減耐性","じゅもん耐性減耐性","即死耐性","ふきとばし耐性") */;
+CREATE TABLE IF NOT EXISTS "taisyou" (
+	"taisyou"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("taisyou")
+) STRICT;
+CREATE VIEW zokusei_group AS
+  SELECT *
+  FROM zokusei
+  UNION ALL
+  SELECT "全" AS zokusei, 0 AS `order`
+/* zokusei_group(zokusei,"order") */;
+CREATE TABLE IF NOT EXISTS "kisoparameter" (
+	"kisoparameter"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("kisoparameter")
+) STRICT;
+CREATE TABLE IF NOT EXISTS "kakuritu" (
+	"kakuritu"	TEXT NOT NULL,
+	"order"	INTEGER NOT NULL UNIQUE,
+	PRIMARY KEY("kakuritu")
+) STRICT;
+CREATE VIEW tokusyukouka_variation AS
+WITH t_kisoparameter AS(
+SELECT "" AS kouka
+, "" AS taisyou
+, "" AS zokusei
+, "" AS keitou
+, "" AS zyoutaiizyou
+, CASE 
+  WHEN kisoparameter IN("HP","MP") THEN "さいだい"||kisoparameter
+  WHEN kisoparameter = "こうげき力" THEN "攻撃力"
+  WHEN kisoparameter = "しゅび力" THEN "守備力"
+  ELSE kisoparameter END
+ AS tokusyukouka
+
+FROM kisoparameter
+)
+,
+t_kakuritu AS(
+SELECT "" AS kouka
+, "" AS taisyou
+, "" AS zokusei
+, "" AS keitou
+, "" AS zyoutaiizyou
+, CASE kakuritu WHEN "暴走率" THEN "魔力の"||kakuritu ELSE kakuritu END AS tokusyukouka
+
+FROM kakuritu
+)
+
+,
+per_hosei_tokusyukouka AS (
+
+SELECT kouka
+, taisyou
+, zokusei
+, keitou
+, zyoutaiizyou
+,(
+(CASE keitou != "" WHEN TRUE THEN keitou||"への" ELSE ''END)
+||(CASE zokusei != "" WHEN TRUE THEN zokusei||"属性" ELSE ''END)
+||(CASE zyoutaiizyou WHEN "全" THEN "すべての状態異常" ELSE zyoutaiizyou END)
+||(CASE taisyou IN("斬撃・体技","斬撃","体技") AND zokusei = "" WHEN TRUE THEN "スキルの"||taisyou ELSE taisyou END)
+||(CASE kouka
+   WHEN "ダメージアップ" THEN "ダメージ"
+   WHEN "HP回復" THEN "HP回復効果"
+   ELSE kouka END)
+) AS tokusyukouka
+FROM kouka
+CROSS JOIN (
+  SELECT * FROM taisyou
+  UNION ALL
+  SELECT '' AS taisyou, 0 AS `order`
+) AS taisyou
+CROSS JOIN (
+  SELECT '' AS zokusei, 1 AS `order`
+  UNION ALL
+  SELECT '全' AS zokusei, 2 AS `order`
+  UNION ALL
+  SELECT zokusei, `order`+2 AS `order` FROM zokusei
+) AS zokusei
+CROSS JOIN (
+  SELECT * FROM keitou
+  UNION ALL
+  SELECT '' AS keitou, 0 AS `order`
+) AS keitou
+CROSS JOIN (
+  SELECT '' AS zyoutaiizyou, 1 AS `order`
+  UNION ALL
+  SELECT '全' AS zyoutaiizyou, 2 AS `order`
+  UNION ALL
+  SELECT zyoutaiizyou, `order`+2 AS `order` FROM zyoutaiizyou
+) AS zyoutaiizyou
+WHERE NOT(
+  kouka = ""
+  OR
+  (taisyou = "" AND zokusei = "" AND keitou = "" AND zyoutaiizyou = "")
+  OR
+  (taisyou != "" AND keitou != "")
+  OR
+  (zokusei != "" AND keitou != "")
+  OR
+  (zokusei != "" AND taisyou = "スキル")
+  OR
+  (
+	kouka = "耐性" AND (
+	  (taisyou != "" AND zokusei != "")
+	  OR
+	  (zokusei != "" AND keitou != "")
+	  OR
+	  (keitou != "" AND taisyou != "")
+	)
+  )
+  OR
+  (
+	kouka = "HP回復" AND (
+	  zokusei != ""
+	  OR
+	  keitou != ""
+	  OR
+	  taisyou NOT IN("スキル","じゅもん","とくぎ")
+	)
+  )
+  OR
+  (
+    kouka = "成功率" AND (
+	  (taisyou = "" AND zokusei = "" AND keitou = "" AND zyoutaiizyou = "")
+	  OR
+	  taisyou != ""
+	  OR
+	  zokusei != ""
+	  OR
+	  keitou != ""
+	)
+  )
+  OR
+  (kouka != "HP回復" AND taisyou IN("どうぐ","とくぎ"))
+  OR
+  (zyoutaiizyou != "" AND(
+    kouka NOT IN("成功率","耐性")
+	OR
+	taisyou != ""
+	OR
+	zokusei != ""
+	OR
+	keitou != ""
+  ))
+)
+order by
+kouka.`order`
+,
+(
+  CASE TRUE
+  WHEN taisyou != "" AND zokusei = "" AND keitou = "" THEN 1
+  WHEN taisyou = ""  AND zokusei != ""  AND keitou = "" THEN 2
+  WHEN taisyou != "" AND zokusei != ""  AND keitou = "" THEN 3
+  WHEN taisyou != "" AND zokusei = ""  AND keitou = "" AND zyoutaiizyou != "" THEN 4
+  ELSE 99
+  END
+)
+, taisyou.`order`
+, zokusei.`order`
+, keitou.`order`
+)
+
+SELECT * FROM t_kisoparameter
+UNION ALL
+SELECT * FROM t_kakuritu
+UNION ALL
+SELECT * FROM per_hosei_tokusyukouka
+/* tokusyukouka_variation(kouka,taisyou,zokusei,keitou,zyoutaiizyou,tokusyukouka) */;
+CREATE VIEW soubi_skill_tokusyukouka_intermate AS
+WITH RECURSIVE split(soubi,idx,fld,remain) AS (
+WITH
+ kousei_filtered AS (
+ SELECT
+  soubi
+  , replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+	regexp_replace(
+	regexp_replace(
+	  skill_tokusyukouka_text
+	,'(スライム系|けもの系|ドラゴン系|虫系|鳥系|植物系|物質系|マシン系|ゾンビ系|悪魔系|エレメント系|怪人系|水系|\?\?\?\?系)(ダメージ|耐性)','$1への$2')
+	,'(^|\n)スキルのHP回復効果','$1スキルHP回復効果')
+	,'？？？？', '????')
+	, '＋', '+')
+	, '％', '%')
+	, '０', '0')
+	, '１', '1')
+	, '２', '2')
+	, '３', '3')
+	, '４', '4')
+	, '５', '5')
+	, '６', '6')
+	, '７', '7')
+	, '８', '8')
+	, '９', '9')
+	, '擊', '撃')
+	, '―', 'ー')
+	, '練成', '錬成')
+	, '特別演出開放', '特別演出解放')
+	, '付与する', '与える')
+	, '（', '(')
+	, '）', ')')
+	, 'とくぎダメージ', '斬撃・体技ダメージ')
+	, 'ずべて', 'すべて')
+   AS val
+ FROM soubi
+)
+
+
+SELECT
+  soubi
+  , instr(val,char(10)) as idx
+  ,substr(val,1,instr(val,char(10))-1) as fld
+  ,substr(val,instr(val,char(10))+1)||char(10) as remain
+FROM kousei_filtered
+
+UNION ALL SELECT
+  soubi
+  , instr(remain,char(10)) as idx
+  ,substr(remain,1,instr(remain,char(10))-1) as fld
+  ,substr(remain,instr(remain,char(10))+1) as remain
+FROM split
+WHERE remain != ''
+)
+
+SELECT
+ soubi
+ , fld AS skill_tokusyukouka_intermate
+FROM split
+/* soubi_skill_tokusyukouka_intermate(soubi,skill_tokusyukouka_intermate) */;
