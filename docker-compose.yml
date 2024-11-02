@@ -1,16 +1,17 @@
-version: '3.7'
+version: "3.7"
 services:
-    web:
-        image: nginx
-        volumes:
-            - .:/usr/share/nginx/html
-        ports:
-            - 8080:80
-    dev:
-        build:
-            context: .
-            target: dev
-        working_dir: /app
-        volumes:
-            - .:/app
-        tty: true
+  web:
+    image: nginx
+    volumes:
+      - .:/usr/share/nginx/html
+      - ./mime.types:/etc/nginx/mime.types
+    ports:
+      - 8080:80
+  dev:
+    build:
+      context: .
+      target: dev
+    working_dir: /app
+    volumes:
+      - .:/app
+    tty: true
