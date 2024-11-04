@@ -711,3 +711,80 @@ tokusyukouka
 
 FROM per_hosei_tokusyukouka_variation
 /* hosei_tokusyukouka_variation(tokusyukouka) */;
+CREATE VIEW soubi_skill_tokusyukouka_intermate_no_regexp AS
+WITH RECURSIVE split(soubi,idx,fld,remain) AS (
+WITH
+ kousei_filtered AS (
+ SELECT
+  soubi
+  , replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+    replace(
+	  skill_tokusyukouka_text
+	,'？？？？', '????')
+	, '＋', '+')
+	, '％', '%')
+	, '０', '0')
+	, '１', '1')
+	, '２', '2')
+	, '３', '3')
+	, '４', '4')
+	, '５', '5')
+	, '６', '6')
+	, '７', '7')
+	, '８', '8')
+	, '９', '9')
+	, '擊', '撃')
+	, '―', 'ー')
+	, '練成', '錬成')
+	, '特別演出開放', '特別演出解放')
+	, '付与する', '与える')
+	, '（', '(')
+	, '）', ')')
+	, 'とくぎダメージ', '斬撃・体技ダメージ')
+	, 'ずべて', 'すべて')
+   AS val
+ FROM soubi
+)
+
+
+SELECT
+  soubi
+  , instr(val,char(10)) as idx
+  ,substr(val,1,instr(val,char(10))-1) as fld
+  ,substr(val,instr(val,char(10))+1)||char(10) as remain
+FROM kousei_filtered
+
+UNION ALL SELECT
+  soubi
+  , instr(remain,char(10)) as idx
+  ,substr(remain,1,instr(remain,char(10))-1) as fld
+  ,substr(remain,instr(remain,char(10))+1) as remain
+FROM split
+WHERE remain != ''
+)
+
+SELECT
+ soubi
+ , fld AS skill_tokusyukouka_intermate
+FROM split
+/* soubi_skill_tokusyukouka_intermate_no_regexp(soubi,skill_tokusyukouka_intermate) */;
